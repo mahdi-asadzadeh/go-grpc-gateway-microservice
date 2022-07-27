@@ -9,28 +9,30 @@ import (
 )
 
 type AuthMiddleware struct {
-	client pb.AuthServiceClient
+	Client pb.AuthServiceClient
 }
 
 func (auth *AuthMiddleware) LoginRequired(ctx *gin.Context) {
 	authorization := ctx.Request.Header.Get("authorization")
-
 	if authorization == "" {
-		ctx.AbortWithStatus(http.StatusUnauthorized)
+		ctx.JSON(http.StatusUnauthorized, "You must be authenticated")
+		ctx.Abort()
 		return
 	}
 
 	token := strings.Split(authorization, "Bearer ")
 
 	if len(token) < 2 {
-		ctx.AbortWithStatus(http.StatusUnauthorized)
+		ctx.JSON(http.StatusUnauthorized, "You must be authenticated")
+		ctx.Abort()
 		return
 	}
-	res, err := auth.client.Validate(context.Background(), &pb.ValidateRequest{
+	res, err := auth.Client.Validate(context.Background(), &pb.ValidateRequest{
 		Token: token[1],
 	})
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusUnauthorized)
+		ctx.JSON(http.StatusUnauthorized, "You must be authenticated")
+		ctx.Abort()
 		return
 	}
 
