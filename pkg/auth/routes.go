@@ -7,19 +7,19 @@ import (
 )
 
 type AuthService struct {
-	client pb.AuthServiceClient
+	Client pb.AuthServiceClient
 }
 
 func InitRegisterRoutes(router *gin.RouterGroup) {
-	ps := AuthService{client: InitServiceClient()}
+	ps := AuthService{Client: InitServiceClient()}
 	router.POST("/register", ps.Register)
 	router.POST("/login", ps.Login)
 }
 
 func (s *AuthService) Register(ctx *gin.Context) {
-	routes.Register(ctx, s.client)
+	routes.Register(ctx, s.Client)
 }
 
 func (s *AuthService) Login(ctx *gin.Context) {
-	routes.Login(ctx, s.client)
+	routes.Login(ctx, s.Client)
 }
